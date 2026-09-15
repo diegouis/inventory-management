@@ -37,6 +37,11 @@ if (canUseDom) {
   )
   isMobile.value = mobileMq.matches
   isMedium.value = mediumMq.matches
+  // These listeners are registered once at module load and never removed on
+  // purpose: the composable is a page-lifetime singleton (same pattern as
+  // useFilters), so there is no component unmount to tie cleanup to. Do not
+  // move them into a component lifecycle hook, or the state stops updating
+  // when that component unmounts.
   mobileMq.addEventListener('change', (e) => {
     isMobile.value = e.matches
     // Leaving mobile must never strand an open drawer or a locked body scroll

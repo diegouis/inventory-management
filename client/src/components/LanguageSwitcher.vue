@@ -62,7 +62,7 @@ import { useI18n } from '../composables/useI18n'
 
 const { currentLocale, setLocale, availableLocales, localeName } = useI18n()
 
-const props = defineProps({
+defineProps({
   placement: { type: String, default: 'down', validator: (v) => ['down', 'up'].includes(v) },
   compact: { type: Boolean, default: false }
 })

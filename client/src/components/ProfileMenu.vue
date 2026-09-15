@@ -83,7 +83,7 @@ import { useI18n } from '../composables/useI18n'
 const { currentUser, logout, getInitials } = useAuth()
 const { t } = useI18n()
 
-const props = defineProps({
+defineProps({
   placement: { type: String, default: 'down', validator: (v) => ['down', 'up'].includes(v) },
   compact: { type: Boolean, default: false }
 })
