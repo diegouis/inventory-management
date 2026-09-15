@@ -1,7 +1,9 @@
 <template>
-  <div class="profile-menu">
+  <div class="profile-menu" :class="{ 'placement-up': placement === 'up', 'is-compact': compact }">
     <button
       class="profile-button"
+      :title="compact ? currentUser.name : undefined"
+      :aria-label="compact ? currentUser.name : undefined"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
@@ -81,6 +83,11 @@ import { useI18n } from '../composables/useI18n'
 const { currentUser, logout, getInitials } = useAuth()
 const { t } = useI18n()
 
+defineProps({
+  placement: { type: String, default: 'down', validator: (v) => ['down', 'up'].includes(v) },
+  compact: { type: Boolean, default: false }
+})
+
 const isDropdownOpen = ref(false)
 const emit = defineEmits(['show-profile-details', 'show-tasks'])
 
@@ -124,10 +131,10 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.5rem 0.875rem;
+  padding: var(--space-2) 0.875rem;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
@@ -155,11 +162,11 @@ const handleLogout = () => {
 .profile-name {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #0f172a;
+  color: var(--color-heading);
 }
 
 .chevron {
-  color: #64748b;
+  color: var(--color-text-muted);
   transition: transform 0.2s ease;
 }
 
@@ -169,15 +176,58 @@ const handleLogout = () => {
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + var(--space-2));
   right: 0;
   min-width: 280px;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
   overflow: hidden;
+}
+
+/*
+ * Sidebar footer placements. "up" opens the menu above a full-width trigger
+ * (footer sits at the bottom of the sidebar, so a drop-down would be clipped
+ * by the viewport). "compact" is the 64px icon rail: text is hidden, the
+ * trigger becomes a square icon button, and the menu flies out to the right
+ * of the rail because the rail itself is too narrow to host a drop-up menu
+ * without it being clipped by the viewport edge or overlapping the rail icons.
+ */
+.placement-up .profile-button {
+  width: 100%;
+}
+
+.placement-up .dropdown-menu {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  min-width: 0;
+}
+
+.is-compact .profile-name,
+.is-compact .chevron {
+  display: none;
+}
+
+.is-compact .profile-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Compound selector so the rail fly-out beats .placement-up regardless of source order */
+.is-compact .dropdown-menu,
+.placement-up.is-compact .dropdown-menu {
+  top: auto;
+  bottom: 0;
+  left: calc(100% + var(--space-2));
+  right: auto;
+  min-width: 240px;
 }
 
 .dropdown-header {
@@ -210,14 +260,14 @@ const handleLogout = () => {
 
 .user-name {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-heading);
   font-size: 0.938rem;
   margin-bottom: 0.25rem;
 }
 
 .user-email {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -225,8 +275,8 @@ const handleLogout = () => {
 
 .dropdown-divider {
   height: 1px;
-  background: #e2e8f0;
-  margin: 0.5rem 0;
+  background: var(--color-border);
+  margin: var(--space-2) 0;
 }
 
 .dropdown-item {
@@ -251,7 +301,7 @@ const handleLogout = () => {
 }
 
 .dropdown-item svg {
-  color: #64748b;
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
@@ -269,7 +319,7 @@ const handleLogout = () => {
 
 .task-badge {
   margin-left: auto;
-  background: #2563eb;
+  background: var(--color-primary);
   color: white;
   font-size: 0.75rem;
   font-weight: 600;

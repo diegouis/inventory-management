@@ -1,0 +1,95 @@
+/*
+ * Design tokens. Every shell dimension, color and spacing value lives here so
+ * the sidebar, topbar, sticky offsets and dropdowns agree by construction.
+ * Palette values match the literals previously scattered through App.vue,
+ * so adopting the tokens changes no colors.
+ */
+:root {
+  /* Palette (slate) */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-heading: #0f172a;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-primary: #2563eb;
+  --color-primary-soft: #eff6ff;
+
+  /* Status */
+  --color-success: #059669;
+  --color-success-soft: #d1fae5;
+  --color-info: #2563eb;
+  --color-info-soft: #dbeafe;
+  --color-warning: #ea580c;
+  --color-warning-soft: #fed7aa;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fecaca;
+
+  /* Spacing, 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Type */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.875rem;
+
+  /* Radii and elevation */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.10);
+
+  /* Shell geometry */
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 64px;
+  --sidebar-drawer-width: 280px;
+  --topbar-height: 56px;
+  --content-max-width: 1600px;
+  --content-pad-x: var(--space-8);
+  --content-pad-y: var(--space-6);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+
+  /* Z scale: sticky rows < sidebar < backdrop < drawer < dropdown < modal (1000/2000, unchanged) */
+  --z-filterbar: 90;
+  --z-topbar: 100;
+  --z-sidebar: 120;
+  --z-backdrop: 190;
+  --z-drawer: 200;
+  --z-dropdown: 1000;
+
+  /*
+   * Breakpoints are documentation only: custom properties cannot be used inside
+   * @media. Keep these literals in sync with every @media rule and with
+   * SIDEBAR_BREAKPOINT in composables/useSidebar.js.
+   *   medium: 1280px  (sidebar defaults to the icon rail below this, RAIL_BREAKPOINT)
+   *   tablet: 1024px  (sidebar becomes a drawer below this, SIDEBAR_BREAKPOINT)
+   *   mobile: 768px   (filter bar becomes a static 2x2 grid below this)
+   */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+  }
+}

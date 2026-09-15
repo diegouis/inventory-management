@@ -1,7 +1,9 @@
 <template>
-  <div class="language-switcher">
+  <div class="language-switcher" :class="{ 'placement-up': placement === 'up', 'is-compact': compact }">
     <button
       class="language-button"
+      :title="compact ? localeName : undefined"
+      :aria-label="compact ? localeName : undefined"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
@@ -60,6 +62,11 @@ import { useI18n } from '../composables/useI18n'
 
 const { currentLocale, setLocale, availableLocales, localeName } = useI18n()
 
+defineProps({
+  placement: { type: String, default: 'down', validator: (v) => ['down', 'up'].includes(v) },
+  compact: { type: Boolean, default: false }
+})
+
 const isDropdownOpen = ref(false)
 
 const languageNames = {
@@ -96,11 +103,11 @@ const selectLanguage = (locale) => {
 .language-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
+  gap: var(--space-2);
+  padding: var(--space-2) 0.875rem;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
@@ -114,7 +121,7 @@ const selectLanguage = (locale) => {
 }
 
 .globe-icon {
-  color: #64748b;
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
@@ -123,7 +130,7 @@ const selectLanguage = (locale) => {
 }
 
 .chevron {
-  color: #64748b;
+  color: var(--color-text-muted);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -134,15 +141,58 @@ const selectLanguage = (locale) => {
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + var(--space-2));
   right: 0;
   min-width: 160px;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
   overflow: hidden;
+}
+
+/*
+ * Sidebar footer placements. "up" opens the menu above a full-width trigger
+ * (footer sits at the bottom of the sidebar, so a drop-down would be clipped
+ * by the viewport). "compact" is the 64px icon rail: label/chevron text is
+ * hidden and the globe icon stays; the menu flies out to the right of the
+ * rail instead of dropping up because the rail is only 64px wide, so a
+ * drop-up would be clipped by the viewport edge and overlap the rail.
+ */
+.placement-up .language-button {
+  width: 100%;
+}
+
+.placement-up .dropdown-menu {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  min-width: 0;
+}
+
+.is-compact .language-label,
+.is-compact .chevron {
+  display: none;
+}
+
+.is-compact .language-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Compound selector so the rail fly-out beats .placement-up regardless of source order */
+.is-compact .dropdown-menu,
+.placement-up.is-compact .dropdown-menu {
+  top: auto;
+  bottom: 0;
+  left: calc(100% + var(--space-2));
+  right: auto;
+  min-width: 160px;
 }
 
 .dropdown-item {
@@ -168,8 +218,8 @@ const selectLanguage = (locale) => {
 }
 
 .dropdown-item.active {
-  background: #eff6ff;
-  color: #2563eb;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
 
 .language-name {
@@ -177,7 +227,7 @@ const selectLanguage = (locale) => {
 }
 
 .check-icon {
-  color: #2563eb;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 </style>

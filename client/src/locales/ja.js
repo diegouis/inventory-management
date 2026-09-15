@@ -7,7 +7,13 @@ export default {
     finance: '財務',
     demandForecast: '需要予測',
     companyName: '触媒コンポーネンツ',
-    subtitle: '在庫管理システム'
+    subtitle: '在庫管理システム',
+    reports: 'レポート',
+    mainNavigation: 'メインナビゲーション',
+    collapseSidebar: 'サイドバーを折りたたむ',
+    expandSidebar: 'サイドバーを展開する',
+    openMenu: 'メニューを開く',
+    closeMenu: 'メニューを閉じる'
   },
 
   // Dashboard
@@ -195,7 +201,8 @@ export default {
     category: 'カテゴリ',
     orderStatus: '注文ステータス',
     all: 'すべて',
-    allMonths: 'すべての月'
+    allMonths: 'すべての月',
+    reset: 'すべてのフィルターをリセット'
   },
 
   // Statuses
@@ -302,6 +309,12 @@ export default {
     dueDate: '期限',
     addTask: 'タスクを追加',
     noTasks: 'タスクがありません。上記からタスクを追加してください！'
+  },
+
+  // Reports
+  reports: {
+    title: 'パフォーマンスレポート',
+    description: '四半期のパフォーマンス指標と月次トレンドを表示'
   },
 
   // Language
