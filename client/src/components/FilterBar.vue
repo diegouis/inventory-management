@@ -59,7 +59,8 @@
         class="reset-filters-btn"
         @click="resetFilters"
         :disabled="!hasActiveFilters"
-        title="Reset all filters"
+        :title="t('filters.reset')"
+        :aria-label="t('filters.reset')"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
@@ -102,27 +103,29 @@ export default {
 
 <style scoped>
 .filters-bar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 0.75rem 0;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-3) 0;
   position: sticky;
-  top: 70px;
-  z-index: 90;
+  /* top uses the topbar token so the two sticky rows never drift apart */
+  top: var(--topbar-height);
+  z-index: var(--z-filterbar);
 }
 
 .filters-container {
-  max-width: 1600px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--content-pad-x);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .filters-grid {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-3) var(--space-4);
+  flex-wrap: wrap;
   flex: 1;
 }
 
@@ -141,15 +144,15 @@ export default {
 
 .filter-select {
   padding: 0.4rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-size: 0.813rem;
-  color: #0f172a;
+  color: var(--color-heading);
   background: white;
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
-  min-width: 140px;
+  min-width: 120px;
 }
 
 .filter-select:hover {
@@ -168,18 +171,18 @@ export default {
   justify-content: center;
   padding: 0.4rem;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #64748b;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
 }
 
 .reset-filters-btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
+  background: var(--color-bg);
+  border-color: var(--color-border-strong);
+  color: var(--color-heading);
 }
 
 .reset-filters-btn:disabled {
@@ -190,5 +193,28 @@ export default {
 .reset-filters-btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* A four-row sticky strip would eat a phone viewport. */
+@media (max-width: 767.98px) {
+  .filters-bar {
+    position: static;
+  }
+  .filters-container {
+    flex-wrap: wrap;
+  }
+  .filters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+  .filter-select {
+    min-width: 0;
+    width: 100%;
+  }
 }
 </style>
