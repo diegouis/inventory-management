@@ -229,6 +229,7 @@ export default {
 
 .card-header {
   display: flex;
+  flex-wrap: wrap; /* lets the search box drop below the title on narrow screens */
   justify-content: space-between;
   align-items: center;
   gap: var(--space-6);
@@ -247,7 +248,11 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 300px;
+  /* Grows to 320px when there is room but can shrink to the container width,
+     so a phone viewport never scrolls horizontally */
+  flex: 1 1 200px;
+  min-width: 0;
+  max-width: 320px;
 }
 
 .search-icon {

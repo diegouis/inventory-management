@@ -518,6 +518,7 @@ export default {
 }
 
 .chart-legend {
+  flex-wrap: wrap; /* three legend items do not fit beside the title on phones */
   display: flex;
   gap: var(--space-6);
   font-size: 0.875rem;
@@ -611,6 +612,7 @@ export default {
 
 .chart-container {
   padding: var(--space-6) 0;
+  overflow-x: auto; /* 12 monthly bar groups have a fixed width; scroll rather than overflow the page */
 }
 
 .bar-chart {

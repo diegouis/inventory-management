@@ -371,6 +371,7 @@ export default {
 .chart-container {
   padding: var(--space-8) var(--space-4);
   min-height: 300px;
+  overflow-x: auto; /* 12 fixed-width bars; scroll rather than overflow the page */
 }
 
 .bar-chart {
