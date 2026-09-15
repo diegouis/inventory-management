@@ -220,7 +220,9 @@ const handleLogout = () => {
   margin: 0 auto;
 }
 
-.is-compact .dropdown-menu {
+/* Compound selector so the rail fly-out beats .placement-up regardless of source order */
+.is-compact .dropdown-menu,
+.placement-up.is-compact .dropdown-menu {
   top: auto;
   bottom: 0;
   left: calc(100% + var(--space-2));

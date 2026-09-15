@@ -15,7 +15,12 @@
 <script setup>
 import { icons } from '../icons'
 
-defineProps({
+const props = defineProps({
   name: { type: String, required: true }
 })
+
+// A typo in an icon name would otherwise render an empty <svg> with no signal
+if (import.meta.env.DEV && !icons[props.name]) {
+  console.warn(`NavIcon: unknown icon "${props.name}"`)
+}
 </script>

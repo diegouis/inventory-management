@@ -80,6 +80,10 @@ watch(isDrawerOpen, async (open) => {
     opener = document.activeElement
     window.addEventListener('keydown', onKeydown)
     await nextTick()
+    // The drawer can close again before this tick resolves (open then
+    // immediately navigate or Escape). Focusing then would pull focus into
+    // an off-screen element, so re-check before touching focus.
+    if (!isDrawerOpen.value) return
     document.querySelector('#app-sidebar .nav-item')?.focus()
   } else {
     window.removeEventListener('keydown', onKeydown)
