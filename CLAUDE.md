@@ -67,7 +67,7 @@ npm install && npm run dev
 - API Client: `client/src/api.js`
 - Backend: `server/main.py`, `server/mock_data.py`
 - Data: `server/data/*.json`
-- Styles: `client/src/App.vue`
+- Styles: `client/src/styles/tokens.css` (design tokens), `client/src/App.vue` (global component classes)
 
 ## Design System
 - Colors: Slate/gray (#0f172a, #64748b, #e2e8f0)
