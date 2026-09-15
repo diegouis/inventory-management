@@ -639,6 +639,10 @@ document.documentElement.scrollWidth <= window.innerWidth
 
 Finish with `npm run build` and the project's existing test command.
 
+**If the Playwright MCP server cannot launch a browser** (it defaults to the `chrome` channel and Google Chrome is not installed, and installing it needs sudo), do not stop. Install the `playwright` package in a scratch directory with `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`, then drive any installed Chromium-based browser (Brave, Edge, Chromium) through `chromium.launch({ executablePath })` with a script that runs the same table of checks. Say in the report that the checks ran through the library instead of the MCP server.
+
+**What the 390px measurement usually catches** that reading the CSS does not: a search box or input with a hard `min-width`, a legend or header row without `flex-wrap`, and bar charts whose bars have fixed widths. Fix the first two by letting the element shrink (`flex: 1 1 200px; min-width: 0`, `flex-wrap: wrap`) and the last by giving the chart container `overflow-x: auto`.
+
 ## Icon Set
 
 Rules: 20x20 viewBox, `fill="none" stroke="currentColor" stroke-width="1.5"`, sized by CSS on the `<svg>`, never emoji or unicode arrows. Path data and the `NavIcon` component are in [icons.md](icons.md).
