@@ -81,7 +81,8 @@
    * Breakpoints are documentation only: custom properties cannot be used inside
    * @media. Keep these literals in sync with every @media rule and with
    * SIDEBAR_BREAKPOINT in composables/useSidebar.js.
-   *   tablet: 1024px  (sidebar becomes a drawer below this)
+   *   medium: 1280px  (sidebar defaults to the icon rail below this, RAIL_BREAKPOINT)
+   *   tablet: 1024px  (sidebar becomes a drawer below this, SIDEBAR_BREAKPOINT)
    *   mobile: 768px   (filter bar becomes a static 2x2 grid below this)
    */
 }

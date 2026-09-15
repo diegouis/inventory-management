@@ -220,6 +220,8 @@ export function useSidebar() {
 }
 ```
 
+**Optional: rail by default on medium screens.** If the sidebar should start as an icon rail between the drawer breakpoint and a second breakpoint (1280px works well), add a second `matchMedia` for that band and a session-only `mediumExpanded` ref. Expose one computed, `isRail`, as the single answer to "is it a rail right now": `false` on mobile, `!mediumExpanded` on medium, the persisted `isCollapsed` on large. The toggle flips `mediumExpanded` while medium and `isCollapsed` otherwise, and the medium listener resets `mediumExpanded` when the width leaves the band. Components read `isRail` and never combine the flags themselves.
+
 **C2. Icons.** Create `src/icons.js` and `src/components/NavIcon.vue` from [icons.md](icons.md).
 
 **C3. The component.** `src/components/AppSidebar.vue`. It reads the singleton, takes the nav list as a prop, and exposes a `footer` slot that receives `rail` so footer widgets can switch to compact mode (scoped CSS cannot reach into them).

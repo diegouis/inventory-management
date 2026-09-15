@@ -37,8 +37,8 @@
       <button
         type="button"
         class="collapse-toggle"
-        :aria-expanded="!isCollapsed"
-        :aria-label="isCollapsed ? t('nav.expandSidebar') : t('nav.collapseSidebar')"
+        :aria-expanded="!rail"
+        :aria-label="rail ? t('nav.expandSidebar') : t('nav.collapseSidebar')"
         @click="toggleCollapsed"
       >
         <NavIcon name="chevron-left" class="icon collapse-icon" />
@@ -62,10 +62,11 @@ defineProps({
 
 const route = useRoute()
 const { t } = useI18n()
-const { isCollapsed, isDrawerOpen, isMobile, toggleCollapsed, closeDrawer } = useSidebar()
+const { isRail, isDrawerOpen, toggleCollapsed, closeDrawer } = useSidebar()
 
-// The drawer is never a rail: collapsed only applies on desktop
-const rail = computed(() => isCollapsed.value && !isMobile.value)
+// The composable decides when the sidebar is a rail (never on mobile, by
+// width on medium screens, by preference on large ones); this just reads it
+const rail = isRail
 
 const brandInitials = computed(() =>
   t('nav.companyName').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
@@ -164,8 +165,8 @@ onBeforeUnmount(() => {
 
 @media (max-width: 1023.98px) {
   /* Below the breakpoint the sidebar is always a full-width off-canvas drawer,
-     never a rail: `rail` is forced false by `!isMobile` in the computed above,
-     so there is no collapsed/expanded distinction to preserve here. */
+     never a rail: useSidebar's isRail returns false on mobile, so there is no
+     collapsed/expanded distinction to preserve here. */
   .app-sidebar {
     position: fixed; inset: 0 auto 0 0;
     width: var(--sidebar-drawer-width);

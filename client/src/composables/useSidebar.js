@@ -1,10 +1,13 @@
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // Shared sidebar state (singleton pattern, same as useFilters)
 const STORAGE_KEY = 'app-sidebar-collapsed'
 
-// Must match the @media (max-width: 1023.98px) rules in the shell components
+// Must match the @media rules in the shell components:
+//   below SIDEBAR_BREAKPOINT the sidebar is an overlay drawer
+//   between SIDEBAR_BREAKPOINT and RAIL_BREAKPOINT it defaults to the icon rail
 export const SIDEBAR_BREAKPOINT = 1024
+export const RAIL_BREAKPOINT = 1280
 
 const canUseDom = typeof window !== 'undefined'
 
@@ -18,20 +21,42 @@ const readCollapsed = () => {
   }
 }
 
-const isCollapsed = ref(readCollapsed()) // desktop icon rail, persisted
+const isCollapsed = ref(readCollapsed()) // large-screen preference, persisted
 const isDrawerOpen = ref(false) // mobile overlay, intentionally never persisted
 const isMobile = ref(false)
+const isMedium = ref(false) // 1024px to 1279.98px: rail by default
+// Session-only override so the toggle can expand the rail on medium screens
+// without touching the persisted large-screen preference
+const mediumExpanded = ref(false)
 
 if (canUseDom) {
-  // 0.02px below the breakpoint so 1024px itself stays desktop, matching the CSS
-  const mq = window.matchMedia(`(max-width: ${SIDEBAR_BREAKPOINT - 0.02}px)`)
-  isMobile.value = mq.matches
-  mq.addEventListener('change', (e) => {
+  // 0.02px below each breakpoint so the boundary width itself stays in the wider mode, matching the CSS
+  const mobileMq = window.matchMedia(`(max-width: ${SIDEBAR_BREAKPOINT - 0.02}px)`)
+  const mediumMq = window.matchMedia(
+    `(min-width: ${SIDEBAR_BREAKPOINT}px) and (max-width: ${RAIL_BREAKPOINT - 0.02}px)`
+  )
+  isMobile.value = mobileMq.matches
+  isMedium.value = mediumMq.matches
+  mobileMq.addEventListener('change', (e) => {
     isMobile.value = e.matches
     // Leaving mobile must never strand an open drawer or a locked body scroll
     if (!e.matches) isDrawerOpen.value = false
   })
+  mediumMq.addEventListener('change', (e) => {
+    isMedium.value = e.matches
+    // The override only makes sense inside the medium band; leaving it resets
+    // so the next visit to that band starts as a rail again
+    if (!e.matches) mediumExpanded.value = false
+  })
 }
+
+// Single source of truth for "is the sidebar an icon rail right now":
+// never on mobile (it is a drawer), width-driven on medium, preference-driven on large
+const isRail = computed(() => {
+  if (isMobile.value) return false
+  if (isMedium.value) return !mediumExpanded.value
+  return isCollapsed.value
+})
 
 watch(isCollapsed, (value) => {
   try {
@@ -47,7 +72,13 @@ watch(isDrawerOpen, (open) => {
 
 export function useSidebar() {
   const toggleCollapsed = () => {
-    isCollapsed.value = !isCollapsed.value
+    // On medium screens the toggle flips the session override, not the persisted
+    // preference, so a large monitor still opens with whatever the user chose there
+    if (isMedium.value) {
+      mediumExpanded.value = !mediumExpanded.value
+    } else {
+      isCollapsed.value = !isCollapsed.value
+    }
   }
   const openDrawer = () => {
     isDrawerOpen.value = true
@@ -58,8 +89,10 @@ export function useSidebar() {
 
   return {
     isCollapsed,
+    isRail,
     isDrawerOpen,
     isMobile,
+    isMedium,
     toggleCollapsed,
     openDrawer,
     closeDrawer
